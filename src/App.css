@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+button {
+  font-size: 14px;
+  padding: 5px;
+  border-radius: 16px;
+  background-color: tomato;
+  color: azure;
+  font-weight: 200;
+}

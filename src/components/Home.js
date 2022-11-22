@@ -7,6 +7,7 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { ethers } from "ethers";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -17,7 +18,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 async function fundAPost(postId, fundingAmount) {
-  const ethers = require("ethers");
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   let contract = new ethers.Contract(
@@ -25,11 +25,11 @@ async function fundAPost(postId, fundingAmount) {
     CrowdFundApp.abi,
     signer
   );
-  const fundAPostTx = await contract.fundAPost(postId, {
-    value: ethers.utils.parseEther("0.001"),
-    gasLimit: 200000,
+  const fundPostTx = await contract.fundPost(postId, {
+    value: ethers.utils.parseEther(fundingAmount),
+    gasLimit: 100000,
   });
-  const fundAPostTxOutput = await fundAPostTx.wait();
+  const fundAPostTxOutput = await fundPostTx.wait();
   console.log("=====>>>>Funding Amount<<<<====");
   console.log("FundTxOutput::::", fundAPostTxOutput);
 }
@@ -71,7 +71,6 @@ export default function Home() {
 
   async function getAllPosts() {
     console.log("-====-In getAllPosts-====-");
-    const ethers = require("ethers");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     let contract = new ethers.Contract(
@@ -83,15 +82,15 @@ export default function Home() {
 
     const items = await Promise.all(
       transaction.map(async (i) => {
-        console.log(i);
         let item = {
           postId: i.postId.toNumber(),
           postTitle: i.postTitle,
           postDescription: i.postDescription,
           postOwner: i.postOwner,
-          postFunding: i.funding.toNumber(),
+          postFunding: ethers.utils.formatEther(i.funding),
           timestamp: i.timestamp,
         };
+        console.log();
         return item;
       })
     );

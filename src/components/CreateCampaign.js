@@ -38,7 +38,7 @@ async function createApost(title, desc) {
   console.log("createTxOutput::::", createTxOutput);
 }
 
-export default function MyFunds(props) {
+export default function CreateCampaign(props) {
   const {
     value: postTitle,
     bind: bindPostTitle,

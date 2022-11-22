@@ -2,10 +2,7 @@ import { Link } from "react-router-dom";
 import { useMatch } from "react-router-dom";
 import { useResolvedPath } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ethers } from "ethers";
-import { useLocation } from "react-router";
 export default function Navbar() {
-  const [walletAddress, setWalletAddress] = useState("0x");
   const [connected, toggleConnect] = useState(false);
   const [currAddress, updateAddress] = useState("0x");
 
@@ -28,7 +25,6 @@ export default function Navbar() {
   }
 
   async function requestAccount() {
-    console.log("<<<<<=============In requestAccount===========>>>>>");
     if (connected) {
       console.log("Metamask Connected::::", connected);
     } else {

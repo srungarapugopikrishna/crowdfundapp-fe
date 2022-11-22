@@ -115,7 +115,7 @@ export default function Navbar() {
         CrowdFundApp
       </Link>
       <ul>
-        <CustomLink to="/myfunds">My Funds</CustomLink>
+        <CustomLink to="/createcampaign">CreateCampaign</CustomLink>
         <CustomLink to="/categories">Categories</CustomLink>
         <CustomLink to="/profile">Profile</CustomLink>
         <li>

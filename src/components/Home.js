@@ -103,6 +103,7 @@ export default function Home() {
           postTitle: i.postTitle,
           postDescription: i.postDescription,
           postOwner: i.postOwner,
+          contractOwner: i.contractOwner,
           postFunding: ethers.utils.formatEther(i.funding),
           timestamp: i.timestamp,
         };
@@ -144,8 +145,9 @@ export default function Home() {
                     Fund
                   </Button>
                 </Item>
-
-                {data[index].postOwner === currAddress ? (
+                <Item>{data[index].postOwner}</Item>
+                <Item>{data[index].contractOwner}</Item>
+                {/* {data[index].postOwner === currAddress ? (
                   <Item>
                     <Button
                       onClick={() => (state.button = 2)}
@@ -158,7 +160,7 @@ export default function Home() {
                   </Item>
                 ) : (
                   ""
-                )}
+                )} */}
               </form>
             </Grid>
           );

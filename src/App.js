@@ -2,7 +2,7 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import Profile from "./components/Profile";
 import Categories from "./components/Categories";
-import MyFunds from "./components/MyFunds";
+import CreateCampaign from "./components/CreateCampaign";
 import Home from "./components/Home";
 import { Route } from "react-router-dom";
 import { Routes } from "react-router-dom";
@@ -14,7 +14,7 @@ function App() {
       <div className="container">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/myfunds" element={<MyFunds />} />
+          <Route path="/createcampaign" element={<CreateCampaign />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>

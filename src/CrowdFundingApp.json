@@ -1,5 +1,5 @@
 {
-  "address": "0xA964072c7D2Bef69364CC113d2EaEE802Ab5FA26",
+  "address": "0x09C0Ba11b3c79cb73fDd01F89e4c87a3b50e435a",
   "abi": [
     { "type": "constructor", "payable": false, "inputs": [] },
     {
@@ -91,6 +91,15 @@
     {
       "type": "function",
       "name": "fundAPost",
+      "constant": false,
+      "stateMutability": "payable",
+      "payable": true,
+      "inputs": [{ "type": "uint256", "name": "postId" }],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "fundPost",
       "constant": false,
       "stateMutability": "payable",
       "payable": true,

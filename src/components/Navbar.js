@@ -7,7 +7,6 @@ import { useLocation } from "react-router";
 export default function Navbar() {
   const [walletAddress, setWalletAddress] = useState("0x");
   const [connected, toggleConnect] = useState(false);
-  const location = useLocation();
   const [currAddress, updateAddress] = useState("0x");
 
   function updateButton() {
@@ -15,14 +14,14 @@ export default function Navbar() {
     if ({ connected }) {
       walletButton.textContent = "Connected";
       walletButton.style.backgroundColor = "green";
-    } else {
-      disconnectWallet();
     }
   }
 
+  let provider;
+
   async function getAddress() {
     const ethers = require("ethers");
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const addr = await signer.getAddress();
     updateAddress(addr);
@@ -62,44 +61,50 @@ export default function Navbar() {
     }
   }
 
-  async function disconnectWallet() {
-    const walletButton = document.querySelector(".connectWalletButton");
-    walletButton.textContent = "Connect Wallet";
-    walletButton.style.backgroundColor = "tomato";
-    // toggleConnect(false);
-    // connected = false;
-  }
-
   async function connectWallet() {
+    console.log("connecting wallet: now is it is connected:::", connected);
     if (typeof window.ethereum !== "undefined") {
       console.log(connected);
       if (connected) {
         console.log("Already connected... Disconnecting");
-        disconnectWallet();
       } else {
         console.log("Not connected... Initiating connection");
         await requestAccount();
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
       }
     } else {
       console.log("typeof window.ethereum is undefined");
     }
   }
 
-  // useEffect(() => {
-  //   let val = window.ethereum.isConnected();
-  //   console.log("val::::", val);
-  //   if (val) {
-  //     console.log("is this because of this?", val);
-  //     getAddress();
-  //     toggleConnect(val);
-  //     updateButton();
-  //   }
-  //   window.ethereum.on("accountsChanged", function (accounts) {
-  //     console.log("---------------->>>>");
-  //     window.location.replace(location.pathname);
-  //   });
-  // });
+  //This helps when page loads the button to make it as connected
+  window.onload = () => {
+    isConnected();
+  };
+  async function isConnected() {
+    const accounts = await window.ethereum.request({ method: "eth_accounts" });
+    if (accounts.length) {
+      console.log(`You're connected to: ${accounts[0]}`);
+      updateButton();
+      updateAddress(window.ethereum._state.accounts[0]);
+      toggleConnect(true);
+    } else {
+      console.log("Metamask is not connected");
+    }
+  }
+
+  //This helps when page is refreshed to update the button
+  useEffect(() => {
+    console.log(
+      "window.ethereum._state.accounts::::",
+      window.ethereum._state.accounts
+    );
+    if (window.ethereum._state.accounts && window.ethereum._state.accounts[0]) {
+      console.log("it is conected");
+      updateButton();
+      updateAddress(window.ethereum._state.accounts[0]);
+      toggleConnect(true);
+    }
+  });
 
   return (
     <nav className="nav">

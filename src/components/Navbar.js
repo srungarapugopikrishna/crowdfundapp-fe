@@ -2,8 +2,11 @@ import { Link } from "react-router-dom";
 import { useMatch } from "react-router-dom";
 import { useResolvedPath } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
+
 export default function Navbar() {
   const [connected, toggleConnect] = useState(false);
+  const location = useLocation();
   const [currAddress, updateAddress] = useState("0x");
 
   function updateButton() {
@@ -94,12 +97,16 @@ export default function Navbar() {
       "window.ethereum._state.accounts::::",
       window.ethereum._state.accounts
     );
+
     if (window.ethereum._state.accounts && window.ethereum._state.accounts[0]) {
       console.log("it is conected");
       updateButton();
       updateAddress(window.ethereum._state.accounts[0]);
       toggleConnect(true);
     }
+    window.ethereum.on("accountsChanged", function (accounts) {
+      window.location.replace(location.pathname);
+    });
   });
 
   return (

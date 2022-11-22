@@ -16,6 +16,24 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+async function fundAPost(postId, fundingAmount) {
+  const ethers = require("ethers");
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  let contract = new ethers.Contract(
+    CrowdFundApp.address,
+    CrowdFundApp.abi,
+    signer
+  );
+  const fundAPostTx = await contract.fundAPost(postId, {
+    value: ethers.utils.parseEther("0.001"),
+    gasLimit: 200000,
+  });
+  const fundAPostTxOutput = await fundAPostTx.wait();
+  console.log("=====>>>>Funding Amount<<<<====");
+  console.log("FundTxOutput::::", fundAPostTxOutput);
+}
+
 export default function Home() {
   const sampleData = [
     {
@@ -47,7 +65,8 @@ export default function Home() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const fund = formData.get("funding");
-    alert(`Fund=${fund}`);
+    const postId = event.currentTarget.id;
+    fundAPost(postId, fund);
   };
 
   async function getAllPosts() {
@@ -70,6 +89,7 @@ export default function Home() {
           postTitle: i.postTitle,
           postDescription: i.postDescription,
           postOwner: i.postOwner,
+          postFunding: i.funding.toNumber(),
           timestamp: i.timestamp,
         };
         return item;
@@ -85,14 +105,13 @@ export default function Home() {
     <Box sx={{ width: "100%" }}>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 2, sm: 3, md: 4 }}>
         {data.map((value, index) => {
-          // return data[index].postTitle + "<>" + data[index].postDescription;
           return (
             <Grid item xs={6}>
-              <Item>Title: {data[index].postTitle} </Item>
-              <Item>Description: {data[index].postDescription}</Item>
-              <Item>Amount Collected: 0</Item>
-              <Item>
-                <form onSubmit={handleSubmit}>
+              <form id={data[index].postId} onSubmit={handleSubmit}>
+                <Item>Title: {data[index].postTitle} </Item>
+                <Item>Description: {data[index].postDescription}</Item>
+                <Item>Funding Received: {data[index].postFunding}</Item>
+                <Item>
                   <TextField
                     label="ETH"
                     id={data[index].postId}
@@ -103,8 +122,8 @@ export default function Home() {
                   <Button variant="contained" type="submit">
                     Fund
                   </Button>
-                </form>
-              </Item>
+                </Item>
+              </form>
             </Grid>
           );
         })}

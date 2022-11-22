@@ -30,7 +30,6 @@ async function fundAPost(postId, fundingAmount) {
     gasLimit: 100000,
   });
   const fundAPostTxOutput = await fundPostTx.wait();
-  console.log("=====>>>>Funding Amount<<<<====");
   console.log("FundTxOutput::::", fundAPostTxOutput);
 }
 
@@ -60,17 +59,34 @@ export default function Home() {
   ];
   const [data, updateData] = useState(sampleData);
   const [dataFetched, updateFetched] = useState(false);
+  const [currAddress, updateAddress] = useState("0x");
+
+  const state = {
+    button: 0,
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const fund = formData.get("funding");
-    const postId = event.currentTarget.id;
-    fundAPost(postId, fund);
+    if (state.button === 1) {
+      const formData = new FormData(event.currentTarget);
+      const fund = formData.get("funding");
+      const postId = event.currentTarget.id;
+      fundAPost(postId, fund);
+    }
+    if (state.button === 2) {
+      alert("WITHDRAW NOW");
+    }
   };
 
+  async function getAddress() {
+    const ethers = require("ethers");
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const addr = await signer.getAddress();
+    updateAddress(addr);
+  }
+
   async function getAllPosts() {
-    console.log("-====-In getAllPosts-====-");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     let contract = new ethers.Contract(
@@ -96,6 +112,7 @@ export default function Home() {
     );
     updateFetched(true);
     updateData(items);
+    getAddress();
   }
 
   if (!dataFetched) getAllPosts();
@@ -118,10 +135,30 @@ export default function Home() {
                     defaultValue="0.01"
                     size="small"
                   />
-                  <Button variant="contained" type="submit">
+                  <Button
+                    onClick={() => (state.button = 1)}
+                    variant="contained"
+                    type="submit"
+                    name="fundbutton"
+                  >
                     Fund
                   </Button>
                 </Item>
+
+                {data[index].postOwner === currAddress ? (
+                  <Item>
+                    <Button
+                      onClick={() => (state.button = 2)}
+                      variant="contained"
+                      type="submit"
+                      name="withdraw"
+                    >
+                      withdraw
+                    </Button>
+                  </Item>
+                ) : (
+                  ""
+                )}
               </form>
             </Grid>
           );

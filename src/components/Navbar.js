@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useMatch } from "react-router-dom";
 import { useResolvedPath } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import { useLocation } from "react-router";
 
 export default function Navbar() {
@@ -9,14 +10,20 @@ export default function Navbar() {
   const location = useLocation();
   const [currAddress, updateAddress] = useState("0x");
 
-  function updateButton() {
+  // function updateButton() {
+  //   const walletButton = document.querySelector(".connectWalletButton");
+  //   if ({ connected }) {
+  //     walletButton.textContent = "Connected";
+  //     walletButton.style.backgroundColor = "green";
+  //   }
+  // }
+  const updateButton = useCallback(() => {
     const walletButton = document.querySelector(".connectWalletButton");
     if ({ connected }) {
       walletButton.textContent = "Connected";
       walletButton.style.backgroundColor = "green";
     }
-  }
-
+  }, []);
   let provider;
 
   async function getAddress() {
@@ -107,7 +114,7 @@ export default function Navbar() {
     window.ethereum.on("accountsChanged", function (accounts) {
       window.location.replace(location.pathname);
     });
-  });
+  }, [updateButton, location.pathname]);
 
   return (
     <nav className="nav">
@@ -116,8 +123,8 @@ export default function Navbar() {
       </Link>
       <ul>
         <CustomLink to="/createcampaign">CreateCampaign</CustomLink>
-        <CustomLink to="/categories">Categories</CustomLink>
-        <CustomLink to="/profile">Profile</CustomLink>
+        {/* <CustomLink to="/categories">Categories</CustomLink>
+        <CustomLink to="/profile">Profile</CustomLink> */}
         <li>
           <div>
             <button className="connectWalletButton" onClick={connectWallet}>

@@ -100,20 +100,27 @@ export default function Navbar() {
 
   //This helps when page is refreshed to update the button
   useEffect(() => {
-    console.log(
-      "window.ethereum._state.accounts::::",
-      window.ethereum._state.accounts
-    );
+    try {
+      console.log(
+        "window.ethereum._state.accounts::::",
+        window.ethereum._state.accounts
+      );
 
-    if (window.ethereum._state.accounts && window.ethereum._state.accounts[0]) {
-      console.log("it is conected");
-      updateButton();
-      updateAddress(window.ethereum._state.accounts[0]);
-      toggleConnect(true);
+      if (
+        window.ethereum._state.accounts &&
+        window.ethereum._state.accounts[0]
+      ) {
+        console.log("it is conected");
+        updateButton();
+        updateAddress(window.ethereum._state.accounts[0]);
+        toggleConnect(true);
+      }
+      window.ethereum.on("accountsChanged", function (accounts) {
+        window.location.replace(location.pathname);
+      });
+    } catch (error) {
+      console.log("Metamask not available");
     }
-    window.ethereum.on("accountsChanged", function (accounts) {
-      window.location.replace(location.pathname);
-    });
   }, [updateButton, location.pathname]);
 
   return (

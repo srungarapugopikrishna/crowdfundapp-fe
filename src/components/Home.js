@@ -145,8 +145,7 @@ export default function Home() {
                     Fund
                   </Button>
                 </Item>
-                <Item>{data[index].postOwner}</Item>
-                <Item>{data[index].contractOwner}</Item>
+                <Item>PostOwner: {data[index].postOwner}</Item>
                 {/* {data[index].postOwner === currAddress ? (
                   <Item>
                     <Button
